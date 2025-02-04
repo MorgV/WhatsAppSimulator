@@ -1,4 +1,5 @@
 // components/CreateChat.js
+
 const CreateChat = ({ phoneNumber, setPhoneNumber, setChatStarted }) => {
   const validatePhoneNumber = (number) => /^[1-9]\d{9,14}$/.test(number);
 
