@@ -13,8 +13,9 @@
 1. **Клонируйте репозиторий:**
 
    ```bash
-   git clone https://github.com/your-repo/whatsapp-chat-app.git
-   cd whatsapp-chat-app
+
+   git clone https://github.com/MorgV/WhatsAppSimulator.git
+   cd WhatsAppSimulator
    ```
 
 2. **Установите зависимости:**
@@ -36,22 +37,18 @@
    Для запуска проекта в режиме разработки выполните:
 
    ```bash
-   npm start
+   npm run dev
    ```
 
    или
 
    ```bash
-   yarn start
+   yarn dev
    ```
 
 4. **Открытие проекта в браузере:**
 
-   После успешного запуска откройте браузер и перейдите по адресу:
-
-   ```
-   http://localhost:3000
-   ```
+   После успешного запуска откройте браузер и перейдите по адресу в консоли
 
 ## ⚙️ Настройка окружения
 
