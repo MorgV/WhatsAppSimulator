@@ -1,6 +1,45 @@
 // api.js
 
 const API_BASE_URL = "https://api.green-api.com";
+export const checkInstanceAuth = async (idInstance, apiTokenInstance) => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/waInstance${idInstance}/getStateInstance/${apiTokenInstance}`
+    );
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Ошибка проверки данных");
+    }
+
+    return result.stateInstance; // Возвращает состояние инстанса
+  } catch (error) {
+    console.error("Ошибка проверки инстанса:", error);
+    return null;
+  }
+};
+export const checkPhoneNumber = async (
+  idInstance,
+  apiTokenInstance,
+  phoneNumber
+) => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/waInstance${idInstance}/checkWhatsapp/${apiTokenInstance}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phoneNumber }),
+      }
+    );
+
+    const result = await response.json();
+    return result.existsWhatsapp; // true, если номер есть в WhatsApp
+  } catch (error) {
+    console.error("Ошибка при проверке номера:", error);
+    return false; // Если ошибка, считаем, что номера нет
+  }
+};
 
 export const sendMessage = async (
   idInstance,

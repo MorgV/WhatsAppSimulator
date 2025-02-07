@@ -1,14 +1,31 @@
-// components/LoginForm.js
+import { useState } from "react";
+
 const LoginForm = ({
   idInstance,
   apiTokenInstance,
   setIdInstance,
   setApiTokenInstance,
   setIsLoggedIn,
+  checkInstanceAuth,
 }) => {
-  const handleLogin = (e) => {
+  const [error, setError] = useState("");
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (idInstance && apiTokenInstance) setIsLoggedIn(true);
+    setError(""); // Сброс ошибки перед проверкой
+
+    if (!idInstance || !apiTokenInstance) {
+      setError("Введите ID Instance и API Token");
+      return;
+    }
+
+    const state = await checkInstanceAuth(idInstance, apiTokenInstance);
+
+    if (state === "authorized") {
+      setIsLoggedIn(true);
+    } else {
+      setError("Неверные данные. Проверьте ID Instance и API Token.");
+    }
   };
 
   return (
@@ -29,6 +46,8 @@ const LoginForm = ({
           onChange={(e) => setApiTokenInstance(e.target.value)}
           className="auth-input"
         />
+        {error && <p className="error-message">{error}</p>}{" "}
+        {/* Показываем ошибку */}
         <button type="submit" className="auth-button">
           Войти
         </button>

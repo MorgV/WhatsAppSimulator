@@ -1,14 +1,37 @@
-// components/CreateChat.js
+import { checkPhoneNumber } from "../api/api";
+import { useState } from "react";
 
-const CreateChat = ({ phoneNumber, setPhoneNumber, setChatStarted }) => {
-  const validatePhoneNumber = (number) => /^[1-9]\d{9,14}$/.test(number);
+const CreateChat = ({
+  idInstance,
+  apiTokenInstance,
+  phoneNumber,
+  setPhoneNumber,
+  setChatStarted,
+}) => {
+  const [error, setError] = useState("");
 
-  const handleStartChat = (e) => {
+  const validatePhoneNumber = (number) => {
+    return /^\d{10,15}$/.test(number);
+  };
+
+  const handleStartChat = async (e) => {
     e.preventDefault();
-    if (validatePhoneNumber(phoneNumber)) {
+    setError(""); // Сброс ошибки
+
+    if (!validatePhoneNumber(phoneNumber)) {
+      setError("Введите номер в международном формате (без +)");
+      return;
+    }
+
+    const isValid = await checkPhoneNumber(
+      idInstance,
+      apiTokenInstance,
+      phoneNumber
+    );
+    if (isValid) {
       setChatStarted(true);
     } else {
-      alert("Введите правильный номер в международном формате");
+      setError("Этот номер не зарегистрирован в WhatsApp.");
     }
   };
 
@@ -23,6 +46,7 @@ const CreateChat = ({ phoneNumber, setPhoneNumber, setChatStarted }) => {
           onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ""))}
           className="auth-input"
         />
+        {error && <p className="error-message">{error}</p>}
         <button type="submit" className="auth-button">
           Создать Чат
         </button>

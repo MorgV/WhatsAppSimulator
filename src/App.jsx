@@ -8,6 +8,7 @@ import {
   sendMessage,
   receiveNotification,
   deleteNotification,
+  checkInstanceAuth,
 } from "./api/api";
 
 const App = () => {
@@ -69,9 +70,12 @@ const App = () => {
           setIdInstance={setIdInstance}
           setApiTokenInstance={setApiTokenInstance}
           setIsLoggedIn={setIsLoggedIn}
+          checkInstanceAuth={checkInstanceAuth}
         />
       ) : !chatStarted ? (
         <CreateChat
+          idInstance={idInstance}
+          apiTokenInstance={apiTokenInstance}
           phoneNumber={phoneNumber}
           setPhoneNumber={setPhoneNumber}
           setChatStarted={setChatStarted}
