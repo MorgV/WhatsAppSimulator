@@ -33,23 +33,15 @@ const App = () => {
       if (!data || !data.body) return;
 
       if (data.body.typeWebhook === "incomingMessageReceived") {
-        const senderId = data.body.senderData?.chatId; // Получаем номер отправителя
         const textMessage = data.body.messageData?.textMessageData?.textMessage;
-        const messageId = data.body.idMessage; // ID сообщения для проверки дубликатов
+        const messageId = data.body.idMessage; // ID сообщения
 
-        // Фильтруем только сообщения от текущего собеседника и проверяем дубликаты
-        if (senderId === `${phoneNumber}@c.us` && textMessage) {
-          setMessages((prev) => {
-            // Проверяем, есть ли уже такое сообщение в списке
-            const isDuplicate = prev.some((msg) => msg.id === messageId);
-            if (!isDuplicate) {
-              return [
-                ...prev,
-                { id: messageId, text: textMessage, sender: "them" },
-              ];
-            }
-            return prev;
-          });
+        // Теперь все входящие сообщения добавляются в список
+        if (textMessage) {
+          setMessages((prev) => [
+            ...prev,
+            { id: messageId, text: textMessage, sender: "them" },
+          ]);
         }
       }
 
