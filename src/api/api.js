@@ -22,9 +22,19 @@ export const sendMessage = async (
         }),
       }
     );
-    return response.json();
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Ошибка при отправке сообщения");
+    }
+
+    return result;
   } catch (error) {
     console.error("Ошибка при отправке сообщения:", error);
+    alert(
+      "Возможно, вы пытаетесь отправить сообщения на разные номера. Бесплатный тариф Green API позволяет отправлять сообщения только одному пользователю."
+    );
     throw error;
   }
 };

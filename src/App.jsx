@@ -28,16 +28,31 @@ const App = () => {
   const fetchMessages = async () => {
     try {
       const data = await receiveNotification(idInstance, apiTokenInstance);
-      if (data?.body?.typeWebhook === "incomingMessageReceived") {
+
+      if (!data || !data.body) return;
+
+      if (data.body.typeWebhook === "incomingMessageReceived") {
+        const senderId = data.body.senderData?.chatId; // Получаем номер отправителя
         const textMessage = data.body.messageData?.textMessageData?.textMessage;
-        if (textMessage) {
-          setMessages((prev) => [
-            ...prev,
-            { text: textMessage, sender: "them" },
-          ]);
+        const messageId = data.body.idMessage; // ID сообщения для проверки дубликатов
+
+        // Фильтруем только сообщения от текущего собеседника и проверяем дубликаты
+        if (senderId === `${phoneNumber}@c.us` && textMessage) {
+          setMessages((prev) => {
+            // Проверяем, есть ли уже такое сообщение в списке
+            const isDuplicate = prev.some((msg) => msg.id === messageId);
+            if (!isDuplicate) {
+              return [
+                ...prev,
+                { id: messageId, text: textMessage, sender: "them" },
+              ];
+            }
+            return prev;
+          });
         }
       }
-      if (data?.receiptId) {
+
+      if (data.receiptId) {
         await deleteNotification(idInstance, apiTokenInstance, data.receiptId);
       }
     } catch (error) {
